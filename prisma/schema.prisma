@@ -19,42 +19,7 @@ datasource db {
 model Usuario {
   id_usuario Int     @id @default(autoincrement()) @map("id_usuario") // Identificador único do usuário, autoincrementado, mapeado para a coluna "id_usuario" no banco de dados
   nome       String  @unique                                      // Nome do usuário, deve ser único
-  senha      String                                       // Senha do usuário
-  projetos   Projeto[]                                  // Relacionamento de um para muitos com o modelo Projeto
+  senha      String                                       // Senha do usuário                                 // Relacionamento de um para muitos com o modelo Projeto
   @@map("usuarios")                                     // Mapeia o nome da tabela para "usuarios" no banco de dados
 }
 
-// Modelo para a entidade Projeto
-model Projeto {
-  id_projeto  Int      @id @default(autoincrement()) @map("id_projeto") // Identificador único do projeto, autoincrementado, mapeado para a coluna "id_projeto" no banco de dados
-  titulo      String                                     // Título do projeto
-  descricao   String?                                    // Descrição do projeto (opcional)
-  dataCriacao DateTime @default(now()) @map("data_criacao") // Data de criação do projeto, padrão para o momento atual, mapeado para a coluna "data_criacao"
-  background  String?                                    // Imagem ou cor de fundo do projeto (opcional)
-  usuarioId   Int      @map("usuario_id")                  // ID do usuário relacionado ao projeto, mapeado para a coluna "usuario_id"
-  usuario     Usuario  @relation(fields: [usuarioId], references: [id_usuario]) // Relacionamento com o modelo Usuario
-  estagios    Estagio[]                                  // Relacionamento de um para muitos com o modelo Estagio
-  @@map("projetos")                                     // Mapeia o nome da tabela para "projetos" no banco de dados
-}
-
-// Modelo para a entidade Estagio
-model Estagio {
-  id_estagio Int      @id @default(autoincrement()) @map("id_estagio") // Identificador único do estágio, autoincrementado, mapeado para a coluna "id_estagio" no banco de dados
-  nome       String                                     // Nome do estágio
-  projetoId  Int      @map("projeto_id")                 // ID do projeto relacionado ao estágio, mapeado para a coluna "projeto_id"
-  projeto    Projeto  @relation(fields: [projetoId], references: [id_projeto]) // Relacionamento com o modelo Projeto
-  cards      Card[]                                     // Relacionamento de um para muitos com o modelo Card
-  @@map("estagios")                                    // Mapeia o nome da tabela para "estagios" no banco de dados
-}
-
-// Modelo para a entidade Card
-model Card {
-  id_card    Int      @id @default(autoincrement()) @map("id_card") // Identificador único do card, autoincrementado, mapeado para a coluna "id_card" no banco de dados
-  titulo     String                                     // Título do card
-  descricao  String?                                    // Descrição do card (opcional)
-  dataCriacao DateTime @default(now()) @map("data_criacao") // Data de criação do card, padrão para o momento atual, mapeado para a coluna "data_criacao"
-  dataEntrega DateTime? @map("data_entrega")              // Data de entrega do card (opcional), mapeado para a coluna "data_entrega"
-  estagioId  Int      @map("estagio_id")                  // ID do estágio relacionado ao card, mapeado para a coluna "estagio_id"
-  estagio    Estagio  @relation(fields: [estagioId], references: [id_estagio]) // Relacionamento com o modelo Estagio
-  @@map("cards")                                        // Mapeia o nome da tabela para "cards" no banco de dados
-}
